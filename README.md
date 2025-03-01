@@ -62,6 +62,3 @@ This document provides an overview of the configuration and functionality of the
 - **Port Channels**: Used to aggregate bandwidth and provide redundancy between switches.
 - **SSH Access**: Enabled on all switches for secure remote management.
 - **Port Security**: Implemented on access ports to enhance network security by restricting access based on MAC addresses.
-
-## Conclusion
-The network switches are configured to provide a robust, secure, and scalable network infrastructure. Each switch has a specific role, whether it's acting as a core switch, distribution switch, or access switch, and they are all interconnected to ensure seamless communication across the network. The use of VLANs, STP, port channels, and port security ensures that the network is both efficient and secure.
