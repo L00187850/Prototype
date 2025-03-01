@@ -1,213 +1,174 @@
-
-Current configuration : 4822 bytes
-!
-! Last configuration change at 15:33:02 UTC Sat Mar 1 2025
-!
-version 15.2
-service timestamps debug datetime msec
-service timestamps log datetime msec
-no service password-encryption
-service compress-config
-!
+!Setting the hostname as Switch3
 hostname Switch3
-!
-boot-start-marker
-boot-end-marker
-!
-!
-!
-no aaa new-model
-!
-!
-!
-!
- --More--
-*Mar  1 15:39:32.238: %PLATFORM-5-SIGNATURE_VERIFIED: Image 'flash0:/vios_l2-adventerprisek9-m' passed code signing ve!        n
-!
-!
-!
-ip cef
-no ipv6 cef
-!
-!
-!
+
+! Setting admin account for vty
+username admin privilege 15
+
+! Setting the ip domain name to this to allow for dns resolution
+ip domain-name L00187850.com
+
+! Setting spanning tree details such as priority into switch 3
 spanning-tree mode pvst
 spanning-tree extend system-id
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
+spanning-tree vlan 1-4094 priority 12288
+
+
+! Configuring port channels for switch 3 to switches 1,2, and 4. Po25 is to switch 2, po30 is to switch 1 and po35 is to switch 4. VLAN 999 is the native vlan.
 interface Port-channel25
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
-!
+
+
 interface Port-channel30
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
-!
+
+
 interface Port-channel35
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
-!
+
+
 interface GigabitEthernet0/0
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 35 mode active
-!
+
+
 interface GigabitEthernet0/1
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 25 mode active
-!
+
+
 interface GigabitEthernet0/2
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 30 mode active
-!
+
+
 interface GigabitEthernet0/3
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 35 mode active
-!
+
+
 interface GigabitEthernet1/0
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 30 mode active
-!
+
+
 interface GigabitEthernet1/1
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 25 mode active
-!
+
+! These ports are administratively shut as they aren't required for security concerns. These ports are also in the discard vlan for this reason.
 interface GigabitEthernet1/2
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet1/3
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet2/0
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet2/1
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet2/2
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet2/3
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/0
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/1
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/2
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/3
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
-ip forward-protocol nd
-!
-ip http server
-ip http secure-server
-!
+
+!Setting the interface of vlan16 to the static ip address.
+interface Vlan16
+ ip address 10.32.16.12 255.255.255.0
+
+! Setting the default gateway of the switch to the static ip address below to allow communication between switches on vlan 16.
+ip default-gateway 10.32.16.254
+
+
+ip ssh version 2
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
-!
-!
-!
-!
-!
-!
-control-plane
-!
-banner exec ^CC
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
 
 
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner incoming ^CC
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner login ^CC
-IOSv - Cisco Systems Confidential -
-
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-!
+!Here i'm setting the vty information for this switch. This includes SSH.
 line con 0
 line aux 0
 line vty 0 4
- login
-!
-!
-end
+ login local
+ length 0
+ transport input ssh
+line vty 5 15
+ login local
+ length 0
+ transport input ssh

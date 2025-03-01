@@ -1,306 +1,322 @@
-Building configuration...
-
-Current configuration : 8684 bytes
-!
-! Last configuration change at 15:33:11 UTC Sat Mar 1 2025
-!
-version 15.2
-service timestamps debug datetime msec
-service timestamps log datetime msec
-no service password-encryption
-service compress-config
-!
+!Setting the hostname as Switch1
 hostname Switch1
-!
-boot-start-marker
-boot-end-marker
-!
-!
-!
-no aaa new-model
-!
-!
-!
-!
-!
-!
-!
+
+! Setting admin account for vty
+username admin privilege 15
+
+
+! Excluding addresses from dhcp pool
+ip dhcp excluded-address 10.32.16.0 10.32.16.3
+ip dhcp excluded-address 10.32.16.20 10.32.16.21
+ip dhcp excluded-address 10.32.16.99 10.32.16.100
+ip dhcp excluded-address 10.32.16.199 10.32.16.200
+ip dhcp excluded-address 10.32.16.254 10.32.16.255
+ip dhcp excluded-address 10.32.16.10
+ip dhcp excluded-address 10.32.16.11
+ip dhcp excluded-address 10.32.16.12
+ip dhcp excluded-address 10.32.16.13
+
+! Declaring IP dhcp pools to allow for dhcp to end clients. 2-16 vlans
 ip dhcp pool VLAN2
  network 10.32.1.0 255.255.255.0
  default-router 10.32.1.1
-!
+
 ip dhcp pool VLAN3
  network 10.32.2.0 255.255.255.0
  default-router 10.32.2.1
-!
+
 ip dhcp pool VLAN5
  network 10.32.4.0 255.255.255.0
  default-router 10.32.4.1
-!
+
 ip dhcp pool VLAN6
  network 10.32.5.0 255.255.255.0
  default-router 10.32.5.1
-!
+
 ip dhcp pool VLAN7
  network 10.32.6.0 255.255.255.0
  default-router 10.32.6.1
-!
+
 ip dhcp pool VLAN8
  network 10.32.7.0 255.255.255.0
  default-router 10.32.7.1
-!
+
 ip dhcp pool VLAN9
  network 10.32.8.0 255.255.255.0
  default-router 10.32.8.1
-!
+
 ip dhcp pool VLAN10
  network 10.32.9.0 255.255.255.0
  default-router 10.32.9.1
-!
+
 ip dhcp pool VLAN11
  network 10.32.10.0 255.255.255.0
  default-router 10.32.10.1
-!
+
 ip dhcp pool VLAN12
  network 10.32.11.0 255.255.255.0
  default-router 10.32.11.1
-!
+
 ip dhcp pool VLAN13
  network 10.32.12.0 255.255.255.0
  default-router 10.32.12.1
-!
+
 ip dhcp pool VLAN14
  network 10.32.13.0 255.255.255.0
  default-router 10.32.13.1
-!
+
 ip dhcp pool VLAN16
  network 10.32.16.0 255.255.255.0
  default-router 10.32.16.1
-!
-!
-ip cef
-no ipv6 cef
-!
-!
-!
+
+! Setting the domain name for DNS resolution
+ip domain-name L00187850.com
+
+! Setting spanning tree details such as priority for switch1
 spanning-tree mode rapid-pvst
 spanning-tree extend system-id
 spanning-tree vlan 1-4094 priority 4096
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
+
+! Setting the port channels and allowing vlans 2-16 and the native vlan 999
+!Trunk ports allow connections between switches. this port channel combines two trunk ports and aggregates the bandwidth.
+!Po1 is for Floordistributer1a, Po2 is for Floordistributer1b, Po20 is for switch2, po30 is for switch3, po40 is for switch4. VLAN 999 is the native vlan.
+
 interface Port-channel1
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
-!
+
+
 interface Port-channel2
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
-!
+
 interface Port-channel20
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
-!
+
+
 interface Port-channel30
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
-!
+
+
 interface Port-channel40
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
-!
+
+
 interface GigabitEthernet0/0
  description Link to Switch 2
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 20 mode active
-!
+
+
 interface GigabitEthernet0/1
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 40 mode active
-!
+
+
 interface GigabitEthernet0/2
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 30 mode active
-!
+
+
 interface GigabitEthernet0/3
  description Link to Switch 2
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 20 mode active
-!
+
+
 interface GigabitEthernet1/0
- switchport trunk allowed vlan 2-4094
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 40 mode active
-!
+
+
 interface GigabitEthernet1/1
- switchport trunk allowed vlan 2-4094
- switchport trunk encapsulation
-*Mar  1 15:41:37.462: %PLATFORM-5-SIGNATURE_VERIFIED: Image 'flash0:/vios_l2-adventerprisek9-m' passed code signing verificationdot1q
- switchport trunk native vlan 16
+ switchport trunk allowed vlan 2-16,999
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 30 mode active
-!
+
+
 interface GigabitEthernet1/2
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 1 mode active
-!
+
+
 interface GigabitEthernet1/3
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 2 mode active
-!
+
+
 interface GigabitEthernet2/0
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 1 mode active
-!
+
+
 interface GigabitEthernet2/1
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet2/2
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 2 mode active
-!
+
+! Discarding remaining ports to the discard vlan.
 interface GigabitEthernet2/3
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/0
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/1
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/2
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
 interface GigabitEthernet3/3
  switchport access vlan 1000
  shutdown
  negotiation auto
-!
+
+
+! Here I am assigning ip addresses to the vlans to act as the gateway for end devices. 
 interface Vlan2
  ip address 10.32.1.1 255.255.255.0
-!
+
+
 interface Vlan3
  ip address 10.32.2.1 255.255.255.0
-!
+
+
 interface Vlan4
  ip address 10.32.3.1 255.255.255.0
-!
+
+
 interface Vlan5
  ip address 10.32.4.1 255.255.255.0
-!
+
+
 interface Vlan6
  ip address 10.32.5.1 255.255.255.0
-!
+
+
 interface Vlan7
  ip address 10.32.6.1 255.255.255.0
-!
+
+
 interface Vlan8
  ip address 10.32.7.1 255.255.255.0
-!
+
+
 interface Vlan9
  ip address 10.32.8.1 255.255.255.0
-!
+
+
 interface Vlan10
  ip address 10.32.9.1 255.255.255.0
-!
+
+
 interface Vlan11
  ip address 10.32.10.1 255.255.255.0
-!
+
+
 interface Vlan12
  ip address 10.32.11.1 255.255.255.0
-!
+
+
 interface Vlan13
  ip address 10.32.12.1 255.255.255.0
-!
+
+
 interface Vlan14
  ip address 10.32.13.1 255.255.255.0
-!
+
+
 interface Vlan16
- ip address 10.32.16.1 255.255.255.0
-!
+ ip address 10.32.16.10 255.255.255.0
+
+
+!Here I'm allowing for OSPF on switch1. Its not yet configured on the rest as we don't know what their access level configurations are behind them.
+
 router ospf 1
  network 10.32.1.0 0.0.0.255 area 0
  network 10.32.2.0 0.0.0.255 area 0
@@ -316,55 +332,24 @@ router ospf 1
  network 10.32.12.0 0.0.0.255 area 0
  network 10.32.13.0 0.0.0.255 area 0
  network 10.32.16.0 0.0.0.255 area 0
-!
-ip forward-protocol nd
-!
-ip http server
-ip http secure-server
-!
+
+!Here i'm setting the default-gateway for vlan 16 and this allows the other network switches that have static ips to connect with this switch.
+ip default-gateway 10.32.16.254
+
+!I'm setting up ssh here for external/remote secured access
+ip ssh version 2
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
-!
-!
-!
-!
-!
-!
-control-plane
-!
-banner exec ^CC
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
 
 
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner incoming ^CC
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner login ^CC
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-!
+!Here i'm setting the vty information for this switch. This includes SSH.
 line con 0
 line aux 0
 line vty 0 4
- login
-!
-!
-end
+ login local
+ length 0
+ transport input ssh
+line vty 5 15
+ login local
+ length 0
+ transport input ssh

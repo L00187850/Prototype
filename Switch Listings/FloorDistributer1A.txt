@@ -1,225 +1,198 @@
-
-Building configuration...
-
-Current configuration : 5242 bytes
-!
-! Last configuration change at 15:33:15 UTC Sat Mar 1 2025
-!
-version 15.2
-service timestamps debug datetime msec
-service timestamps log datetime msec
-no service password-encryption
-service compress-config
-!
+!Setting the hostname as FloorDistributer1A
 hostname FloorDistributer1A
-!
-boot-start-marker
-boot-end-marker
-!
-!
-!
-no aaa new-model
-!
-!
-!
-!
-!
-!
-!
-!
-ip cef
-no ipv6 cef
-!
-!
-!
+
+! Setting admin account for vty
+username admin privilege 15
+
+! Setting the ip domain name to this to allow for dns resolution
+ip domain-name L00187850.com
+
+
+! Setting spanning tree details such as priority into floordistributer1a. an access layer switch shouldn't usually be a root bridge. so the default is set here.
 spanning-tree mode rapid-pvst
 spanning-tree extend system-id
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
+spanning-tree vlan 1-4094 priority 32768
+
+!Configuring two port channels from switch 1 and floordistributer1b. Po1 is to switch1 and Po3 is to floordistributer1b.
+
 interface Port-channel1
  switchport access vlan 7
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
 !
 interface Port-channel3
+ switchport access vlan 7
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
-!
+
+! Assigning access ports to particular vlans for demonstration purposes. Also adding spanning tree guard root to protect against root bridges.
 interface GigabitEthernet0/0
  description Hosts
  switchport access vlan 3
  switchport mode access
  negotiation auto
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet0/1
  description Hosts
  switchport access vlan 3
  switchport mode access
  negotiation auto
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet0/2
  description Wireless_APs
  switchport access vlan 13
  switchport mode access
  negotiation auto
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet0/3
  description Hosts
  switchport access vlan 3
  switchport mode access
  negotiation auto
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet1/0
  description Technical_Clients
  switchport access vlan 6
  switchport mode access
+! This port security command will drop unauthorized traffic but doesn't shut down the port.
+ switchport port-security violation protect
+! This port security command will learn the mac address of the connected device and saves it. if an unfamiliar device attempts to connect, it is blocked. 
+ switchport port-security mac-address sticky
  negotiation auto
-!
+ !Setting spanning-tree guard root. This prtects the network from root bridges. best used on access ports.
+ spanning-tree guard root
+
+
 interface GigabitEthernet1/1
  description Technical_Clients
  switchport access vlan 6
  switchport mode access
+! This port security command will drop unauthorized traffic but doesn't shut down the port.
+ switchport port-security violation protect
+! This port security command will learn the mac address of the connected device and saves it. if an unfamiliar device attempts to connect, it is blocked. 
+ switchport port-security mac-address sticky
  negotiation auto
+ !Setting spanning-tree guard root. This prtects the network from root bridges. best used on access ports.
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet1/2
  switchport access vlan 7
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 1 mode active
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet1/3
  negotiation auto
-!
+
+
 interface GigabitEthernet2/0
- switchport trunk allowed vlan 2-14,16
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  negotiation auto
  channel-group 1 mode active
-!
+
+
 interface GigabitEthernet2/1
  description Telephony
+ !setting port to access port, used for end devices.
  switchport access vlan 8
  switchport mode access
  negotiation auto
+!Setting spanning-tree guard root. This prtects the network from root bridges. best used on access ports.
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet2/2
  description Telephony
+!setting port to access port, used for end devices.
  switchport access vlan 8
  switchport mode access
  negotiation auto
+!Setting spanning-tree guard root. This prtects the network from root bridges. best used on access ports.
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet2/3
  description storage
+!setting port to access port, used for end devices.
  switchport access vlan 10
  switchport mode access
  negotiation auto
+  !Setting spanning-tree guard root. This prtects the network from root bridges. best used on access ports.
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet3/0
  description Hosts
+!setting port to access port, used for end devices.
  switchport access vlan 3
  switchport mode access
  negotiation auto
+ !Setting spanning-tree guard root. This prtects the network from root bridges. best used on access ports.
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet3/1
  negotiation auto
-!
+
+
 interface GigabitEthernet3/2
  switchport access vlan 7
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 3 mode active
  spanning-tree guard root
-!
+
+
 interface GigabitEthernet3/3
+ switchport trunk allowed vlan 2-16,999
  switchport trunk encapsulation dot1q
- switchport trunk native vlan 16
+ switchport trunk native vlan 999
  switchport mode trunk
  switchport nonegotiate
  negotiation auto
  channel-group 3 mode active
-!
-ip forward-protocol nd
-!
-ip http server
-ip http secure-server
-!
+
+
+ip ssh version 2
 ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
 ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
-!
-!
-!
-!
-!
-!
-control-plane
-!
-banner exec ^CC
-IOSv - Cisco Systems Confidential -
 
-Supplemental End User License Restrictions
 
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
+!Here i'm setting the vty information for this switch. This includes SSH.
 
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner incoming ^CC
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-banner login ^CC
-IOSv - Cisco Systems Confidential -
-
-Supplemental End User License Restrictions
-
-This IOSv software is provided AS-IS without warranty of any kind. Under no circumstances may this software be used separate from the Cisco Modeling Labs Software that this software was provided with, or deployed or used as part of a production environme
-
-By using the software, you agree to abide by the terms and conditions of the Cisco End User License Agreement at http://www.cisco.com/go/eula. Unauthorized use or distribution of this software is expressly prohibited.
-^C
-!
 line con 0
 line aux 0
 line vty 0 4
- login
-!
-!
-end
+ login local
+ length 0
+ transport input ssh
+line vty 5 15
+ login local
+ length 0
+ transport input ssh

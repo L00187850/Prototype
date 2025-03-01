@@ -1,53 +1,67 @@
-# Assignment 4 Overview
+# Network Switch Configuration Overview
 
-This repository contains configuration files for six network switches. Below is a brief overview of the setup:
+This document provides an overview of the configuration and functionality of the network switches in the provided files. The switches are part of a network infrastructure designed to support multiple VLANs, provide DHCP services, ensure network security, and facilitate communication between different network segments.
 
-## Switch Configurations
+## Switches Overview
 
 ### Switch1
-- **Hostname**: Switch1  
-- **Description**: Acts as a core switch with multiple VLANs configured for different network segments.  
-- **Key Features**:  
-  - Multiple DHCP pools for VLANs 2-14 and 16.  
-  - OSPF routing for VLAN networks.  
-  - Port-channels configured for trunking with VLANs 2-14 and 16.  
+- **Hostname**: Switch1
+- **Functionality**:
+  - **DHCP Services**: Excludes specific IP addresses from the DHCP pool and defines DHCP pools for VLANs 2-16.
+  - **Spanning Tree Protocol (STP)**: Configured with Rapid PVST mode and a priority of 4096 for VLANs 1-4094.
+  - **Port Channels**: Configured for trunking with VLANs 2-16 and native VLAN 999. Port channels are set up for connections to other switches (Switch2, Switch3, Switch4, FloorDistributer1A, and FloorDistributer1B).
+  - **VLAN Interfaces**: IP addresses are assigned to VLAN interfaces to act as gateways for end devices.
+  - **OSPF**: Configured for routing between VLANs.
+  - **SSH**: Enabled for secure remote access.
 
 ### Switch2
-- **Hostname**: Switch2  
-- **Description**: A distribution switch with trunking enabled for VLANs 2-14 and 16.  
-- **Key Features**:  
-  - Port-channels configured for trunking.  
-  - Spanning-tree mode set to PVST.  
+- **Hostname**: Switch2
+- **Functionality**:
+  - **Spanning Tree Protocol (STP)**: Configured with PVST mode and a priority of 8192 for VLANs 1-4094.
+  - **Port Channels**: Configured for trunking with VLANs 2-16 and native VLAN 999. Port channels are set up for connections to Switch1, Switch3, and Switch4.
+  - **VLAN Interface**: IP address assigned to VLAN16 for remote connectivity.
+  - **SSH**: Enabled for secure remote access.
 
 ### Switch3
-- **Hostname**: Switch3  
-- **Description**: Another distribution switch with similar trunking configurations.  
-- **Key Features**:  
-  - Port-channels for trunking with VLANs 2-14 and 16.  
-  - Spanning-tree mode set to PVST.  
+- **Hostname**: Switch3
+- **Functionality**:
+  - **Spanning Tree Protocol (STP)**: Configured with PVST mode and a priority of 12288 for VLANs 1-4094.
+  - **Port Channels**: Configured for trunking with VLANs 2-16 and native VLAN 999. Port channels are set up for connections to Switch1, Switch2, and Switch4.
+  - **VLAN Interface**: IP address assigned to VLAN16 for remote connectivity.
+  - **SSH**: Enabled for secure remote access.
 
 ### Switch4
-- **Hostname**: Switch4  
-- **Description**: A distribution switch with trunking configurations.  
-- **Key Features**:  
-  - Port-channels for trunking with VLANs 2-14 and 16.  
-  - Spanning-tree mode set to PVST.  
+- **Hostname**: Switch4
+- **Functionality**:
+  - **Spanning Tree Protocol (STP)**: Configured with PVST mode and a priority of 16384 for VLANs 1-4094.
+  - **Port Channels**: Configured for trunking with VLANs 2-16 and native VLAN 999. Port channels are set up for connections to Switch1, Switch2, and Switch3.
+  - **VLAN Interface**: IP address assigned to VLAN16 for remote connectivity.
+  - **SSH**: Enabled for secure remote access.
 
 ### FloorDistributer1A
-- **Hostname**: FloorDistributer1A  
-- **Description**: A floor distribution switch with access and trunk ports.  
-- **Key Features**:  
-  - Access ports for hosts, wireless APs, and technical clients.  
-  - Port-channels for trunking with VLANs 2-14 and 16.  
-  - Spanning-tree guard root enabled on access ports.  
+- **Hostname**: FloorDistributer1A
+- **Functionality**:
+  - **Spanning Tree Protocol (STP)**: Configured with Rapid PVST mode and a priority of 32768 for VLANs 1-4094.
+  - **Port Channels**: Configured for trunking with VLANs 2-16 and native VLAN 999. Port channels are set up for connections to Switch1 and FloorDistributer1B.
+  - **Access Ports**: Configured for specific VLANs (e.g., VLAN 3 for hosts, VLAN 6 for technical clients, VLAN 13 for wireless APs).
+  - **Port Security**: Implemented on certain ports to restrict access based on MAC addresses.
+  - **SSH**: Enabled for secure remote access.
 
 ### FloorDistributer1B
-- **Hostname**: FloorDistributer1B  
-- **Description**: Another floor distribution switch with similar configurations.  
-- **Key Features**:  
-  - Access ports for hosts, infrastructure services, and technical clients.  
-  - Port-channels for trunking with VLANs 2-14 and 16.  
-  - Port-security enabled on access ports. 
+- **Hostname**: FloorDistributer1B
+- **Functionality**:
+  - **Spanning Tree Protocol (STP)**: Configured with Rapid PVST mode and a priority of 32768 for VLANs 1-4094.
+  - **Port Channels**: Configured for trunking with VLANs 2-16 and native VLAN 999. Port channels are set up for connections to Switch1 and FloorDistributer1A.
+  - **Access Ports**: Configured for specific VLANs (e.g., VLAN 3 for hosts, VLAN 6 for technical clients, VLAN 12 for security cameras).
+  - **Port Security**: Implemented on certain ports to restrict access based on MAC addresses.
+  - **SSH**: Enabled for secure remote access.
 
-## Summary
-This setup represents a typical enterprise network with core, distribution, and access layers. The core switch (Switch1) handles inter-VLAN routing and DHCP, while the distribution and floor switches manage access and trunking for various network segments. The image helps visualize the physical connections between these switches.
+## Common Features Across Switches
+- **VLAN Configuration**: All switches are configured to support multiple VLANs, with VLAN 999 as the native VLAN for trunk ports.
+- **Spanning Tree Protocol**: Each switch is configured with STP to prevent network loops, with varying priorities to ensure a stable network topology.
+- **Port Channels**: Used to aggregate bandwidth and provide redundancy between switches.
+- **SSH Access**: Enabled on all switches for secure remote management.
+- **Port Security**: Implemented on access ports to enhance network security by restricting access based on MAC addresses.
+
+## Conclusion
+The network switches are configured to provide a robust, secure, and scalable network infrastructure. Each switch has a specific role, whether it's acting as a core switch, distribution switch, or access switch, and they are all interconnected to ensure seamless communication across the network. The use of VLANs, STP, port channels, and port security ensures that the network is both efficient and secure.
