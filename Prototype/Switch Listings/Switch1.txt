@@ -4,7 +4,41 @@ hostname Switch1
 ! Setting admin account for vty
 username admin privilege 15
 
+vtp domain cisco
+vtp password cisco
+vtp mode server
+vtp version 2
 
+vlan 2
+Name Hosts
+vlan 3
+Name Staff_Devices
+vlan 4
+Name Power_Infrastructure
+vlan 5
+Name Technical_Clients
+vlan 6
+Name Infrastructure_Serv
+vlan 7
+Name Telephony
+vlan 8
+Name HVAC_Infrastructure
+vlan 9
+Name Storage
+vlan 10
+Name NetMangage
+vlan 11
+Name Security_Cameras
+vlan 12
+Name Wireless_APs
+vlan 13
+Name Internal_Chat_App
+vlan 14
+Name Loopback
+vlan 15
+Name_Routers
+vlan 16
+name Links
 ! Excluding addresses from dhcp pool
 ip dhcp excluded-address 10.32.16.0 10.32.16.3
 ip dhcp excluded-address 10.32.16.20 10.32.16.21
